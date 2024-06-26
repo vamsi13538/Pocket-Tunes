@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player - Mini</title>
+    <link
+      rel="shortcut icon"
+      href="https://img.icons8.com/?size=160&id=a0nRuMEHmrLC&format=png"
+      type="image/x-icon"
+    />
+    <script
+      src="https://kit.fontawesome.com/7e99a9e738.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap");
+      /* CSS root variables */
+      :root {
+        --cardBackgroundColor: #feffd2;
+        --songBackgroundColor: #ffeea9;
+        --textColorWhite: black;
+        --createPlaylistBtnBgColor: #ff7d29;
+        --dropDownBgColor: #ffbf78;
+        --songImageBgColor: #ffbf78;
+        --prevNxtAdpgBtnBgColor: #ffff;
+        --darkCardBgColor: #7f8c8d;
+        --darkSongBgColor: #bdc3c7;
+        --darkSongImageBgColor: #ffeea9;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        caret-color: transparent;
+      }
+
+      /* Toggle theme section starts here */
+      .toggleIconContainer {
+        position: relative;
+        padding: 0.2rem 0.2rem;
+        margin: 0.2rem auto;
+        width: 98%;
+      }
+
+      #toggleOff {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 2.8rem;
+        cursor: pointer;
+        z-index: -1;
+      }
+
+      .lightLetter {
+        display: none;
+        position: absolute;
+        top: 32%;
+        right: 2.8%;
+        z-index: 1;
+        color: white;
+      }
+
+      .darkLetter {
+        position: absolute;
+        top: 32%;
+        right: 1.2%;
+        z-index: 1;
+      }
+
+      .sgstThemeTxt {
+        position: absolute;
+        top: 32%;
+        left: 2%;
+        text-transform: capitalize;
+      }
+
+      /* Toggle theme section ends here */
+
+      /* Header Section starts here */
+      header {
+        padding: 0.2rem 0.2rem;
+        margin: 0.1rem auto;
+        width: 98%;
+      }
+
+      header h2 {
+        font-size: 2.2rem;
+        font-family: "Playwrite IT Moderna", cursive;
+        text-align: center;
+        margin: 0;
+      }
+
+      /* Header Section ends here */
+
+      /* All songs section starts here */
+      .songsMainContainer {
+        display: flex;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 0.2rem 0.2rem;
+        margin: 0.2rem auto;
+        width: 98%;
+      }
+
+      .allSongsContainer {
+        background-color: var(--cardBackgroundColor);
+        border-radius: 0.4rem;
+        padding: 0.2rem 0.2rem;
+        padding-top: 1.2rem;
+        width: 28%;
+        margin-top: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .filterContainer {
+        padding: 0.2rem 0.2rem;
+      }
+
+      #genreFilter {
+        background-color: var(--dropDownBgColor);
+        outline: none;
+      }
+
+      #songSearchInput {
+        width: 97%;
+        padding: 0.4rem 0.2rem;
+        margin: 0.2rem 0rem;
+        outline: none;
+        caret-color: black;
+        background-color: var(--cardBackgroundColor);
+        border: 1px solid black;
+        border-radius: 0.4rem;
+      }
+
+      .allSongsListContainer {
+        padding: 0.2rem 0.2rem;
+        margin-top: 0.4rem;
+        height: 21rem;
+        overflow-y: scroll;
+        scrollbar-color: transparent transparent;
+        scrollbar-color: transparent transparent;
+      }
+
+      .allSongsListContainer ul {
+        list-style-type: none;
+        padding-left: 0.2rem;
+      }
+
+      .allSongsListContainer ul li {
+        background-color: var(--songBackgroundColor);
+        border: 1px solid grey;
+        color: var(--textColorWhite);
+        border-radius: 0.2rem;
+        padding: 0.4rem 0.4rem;
+        margin: 0.2rem 0rem;
+        cursor: pointer;
+      }
+
+      .allSongsListContainer ul li:hover {
+        background-color: var(--textColorWhite);
+        color: var(--songBackgroundColor);
+      }
+
+      .allSongsContainer h3 {
+        padding: 0.2rem 0.2rem;
+        margin-top: 0.2rem;
+      }
+
+      /* All songs section ends here */
+
+      /* Song card section starts here */
+      .songsCardMainContainer {
+        background-color: var(--cardBackgroundColor);
+        border-radius: 0.4rem;
+        padding: 0.2rem 0.2rem;
+        padding-top: 1.2rem;
+        width: 40%;
+        height: 28rem;
+        margin-top: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .songCardContainer {
+        background-color: var(--songImageBgColor);
+        border-radius: 0.8rem;
+        padding: 0.2rem 0.2rem;
+        width: 90%;
+        margin: 0.1rem auto;
+      }
+
+      .songCardImageContainer {
+        width: 90%;
+        height: 18rem;
+        border-radius: 0.4rem;
+        margin: 0.1rem auto;
+      }
+
+      .audioInfoMainContainer {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        margin: 0.1rem auto;
+      }
+
+      .songCardTextContent {
+        padding: 0.2rem 0.2rem;
+        width: 30%;
+        margin: 0.4rem auto;
+      }
+
+      .songCardImageContainer img {
+        width: 100%;
+        height: 100%;
+        border-radius: 0.4rem;
+      }
+
+      .songPlayerContainer {
+        text-align: center;
+        width: 85%;
+        padding: 0.4rem 0.2rem;
+        margin: 0.6rem 0.1rem;
+      }
+
+      .songPlayerContainer audio {
+        width: 98%;
+        height: 2.6rem;
+      }
+
+      .prevNextBtnContainer {
+        display: flex;
+        justify-content: space-around;
+        gap: 1rem;
+        width: 85%;
+        margin: 0.6rem auto;
+        align-items: center;
+        padding: 0.2rem 0.2rem;
+      }
+
+      .prevNextBtnContainer button {
+        background-color: var(--prevNxtAdpgBtnBgColor);
+        width: 20%;
+        padding: 0.4rem 0.4rem;
+        cursor: pointer;
+        border: 1px solid grey;
+        color: var(--textColorWhite);
+      }
+
+      .previousBtn:hover {
+        opacity: 0.9;
+      }
+
+      .nextBtn:hover {
+        opacity: 0.9;
+      }
+
+      /* Song card section ends here */
+
+      /* Media Queries Section starts here */
+      @media (max-width: 910px) {
+        header h2 {
+          font-size: 1.88rem;
+        }
+
+        .lightLetter {
+          right: 3.8%;
+        }
+
+        .darkLetter {
+          right: 1.6%;
+        }
+
+        .allSongsContainer {
+          width: 34%;
+        }
+
+        #songSearchInput {
+          width: 96%;
+        }
+
+        .allSongsListContainer {
+          height: 23rem;
+        }
+
+        .songsCardMainContainer {
+          width: 48%;
+          height: 30rem;
+        }
+
+        .audioInfoMainContainer {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .songCardTextContent {
+          padding: 0.2rem 0.2rem;
+          width: 94%;
+          margin: 0.2rem 0.2rem;
+        }
+
+        .songPlayerContainer {
+          width: 94%;
+          margin: 0.1rem auto;
+        }
+
+        .songPlayerContainer audio {
+          width: 98%;
+          height: 2.2rem;
+          margin: 0.1rem auto;
+        }
+
+        .prevNextBtnContainer {
+          width: 85%;
+        }
+
+        .prevNextBtnContainer button {
+          width: 30%;
+        }
+      }
+
+      @media (max-width: 710px) {
+        header h2 {
+          font-size: 1.88rem;
+        }
+
+        .lightLetter {
+          right: 5.4%;
+        }
+
+        .darkLetter {
+          right: 2.5%;
+        }
+
+        .songsMainContainer {
+          display: flex;
+          flex-direction: column-reverse;
+        }
+
+        .allSongsContainer {
+          width: 98%;
+        }
+
+        .allSongsListContainer {
+          height: 14rem;
+        }
+
+        #songSearchInput {
+          width: 98.5%;
+        }
+
+        .songsCardMainContainer {
+          width: 98%;
+          height: max-content;
+          margin: 0;
+        }
+
+        .songCardTextContent {
+          width: 28%;
+        }
+
+        .audioInfoMainContainer {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          width: 90%;
+          margin: 0.1rem auto;
+        }
+
+        .songPlayerContainer {
+          text-align: center;
+          width: 90%;
+          padding: 0.4rem 0.2rem;
+          margin: 0.6rem 0.1rem;
+        }
+
+        .songPlayerContainer audio {
+          width: 98%;
+          height: 2.6rem;
+        }
+
+        .prevNextBtnContainer button {
+          width: 50%;
+        }
+      }
+
+      @media (max-width: 630px) {
+        .lightLetter {
+          right: 6.6%;
+        }
+      }
+
+      /* Media Queries Section ends here */
+    </style>
+  </head>
+  <body>
+    <!-- Toggle theme section starts here -->
+    <section class="toggleIconContainer">
+      <i id="toggleOff" class="fa-solid fa-toggle-off"></i>
+      <p class="sgstThemeTxt"><i>"--click here to change theme --"</i></p>
+      <p class="darkLetter">L</p>
+      <p class="lightLetter">D</p>
+    </section>
+    <!-- Toggle theme section ends here -->
+    <!-- Header Section starts here -->
+    <header>
+      <h2><i>PocketTunes</i></h2>
+    </header>
+    <!-- Header Section ends here -->
+    <section class="songsMainContainer">
+      <!-- All songs section starts here -->
+      <section class="allSongsContainer">
+        <div class="filterContainer">
+          <p>
+            Filter by Genre :
+            <select name="genre" id="genreFilter">
+              <option value="all">All</option>
+              <option value="hip Hop">Hip Hop</option>
+              <option value="rock">Rock</option>
+              <option value="pop">Pop</option>
+            </select>
+          </p>
+        </div>
+        <input
+          type="text"
+          id="songSearchInput"
+          placeholder="Search songs here..."
+        />
+        <h3>All Songs</h3>
+        <div class="allSongsListContainer"></div>
+      </section>
+      <!-- All songs section ends here -->
+      <!-- Song card section starts here -->
+      <section class="songsCardMainContainer">
+        <div class="songCardContainer">
+          <div class="songCardImageContainer">
+            <img id="songImage" src="Ninja_Logo_Comic.jpg" alt="No_Img" />
+          </div>
+          <div class="audioInfoMainContainer">
+            <div class="songCardTextContent">
+              <h3 class="songName">Locked Away</h3>
+              <p class="songArtistName">Adele</p>
+            </div>
+            <div class="songPlayerContainer">
+              <audio
+                id="audioInput"
+                src="file_example_MP3_5MG.mp3"
+                type="audio/mpeg"
+                controls
+                loop
+              >
+                Your browser doesn't support audio tag.
+              </audio>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="songPlayerContainer">
+                <audio id="audioInput" src="file_example_MP3_5MG.mp3" type="audio/mpeg" controls loop>
+                    Your browser doesn't support audio tag.
+                  </audio>
+            </div> -->
+        <div class="prevNextBtnContainer">
+          <button type="button" class="previousBtn">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button type="button" class="nextBtn">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+        </div>
+      </section>
+      <!-- Song card section ends here -->
+    </section>
+
+    <div style="height: 100px"></div>
+    <script>
+      // Initializing variables
+      const allSongsListContainer = document.querySelector(
+        ".allSongsListContainer"
+      );
+      const genreFilter = document.querySelector("#genreFilter");
+      const songSearchInput = document.querySelector("#songSearchInput");
+      const previousBtn = document.querySelector(".previousBtn");
+      const nextBtn = document.querySelector(".nextBtn");
+      const audioPlayer = document.getElementById("audioInput"); // Reference to the audio player element
+      const songsData = [
+        {
+          title: "Death Bed",
+          genre: "Hip Hop",
+          artist: "Powfu",
+          artwork: "https://samplesongs.netlify.app/album-arts/death-bed.jpg",
+          url: "https://samplesongs.netlify.app/Death%20Bed.mp3",
+          id: "1",
+        },
+        {
+          title: "Bad Liar",
+          genre: "Hip Hop",
+          artist: "Imagine Dragons",
+          artwork: "https://samplesongs.netlify.app/album-arts/bad-liar.jpg",
+          url: "https://samplesongs.netlify.app/Bad%20Liar.mp3",
+          id: "2",
+        },
+        {
+          title: "Faded",
+          genre: "Rock",
+          artist: "Alan Walker",
+          artwork: "https://samplesongs.netlify.app/album-arts/faded.jpg",
+          url: "https://samplesongs.netlify.app/Faded.mp3",
+          id: "3",
+        },
+        {
+          title: "Hate Me",
+          genre: "Pop",
+          artist: "Ellie Goulding",
+          artwork: "https://samplesongs.netlify.app/album-arts/hate-me.jpg",
+          url: "https://samplesongs.netlify.app/Hate%20Me.mp3",
+          id: "4",
+        },
+        {
+          title: "Solo",
+          genre: "Pop",
+          artist: "Clean Bandit",
+          artwork: "https://samplesongs.netlify.app/album-arts/solo.jpg",
+          url: "https://samplesongs.netlify.app/Solo.mp3",
+          id: "5",
+        },
+        {
+          title: "Without Me",
+          genre: "Rock",
+          artist: "Halsey",
+          artwork: "https://samplesongs.netlify.app/album-arts/without-me.jpg",
+          url: "https://samplesongs.netlify.app/Without%20Me.mp3",
+          id: "6",
+        },
+        {
+          title: "Death Bed",
+          genre: "Hip Hop",
+          artist: "Powfu",
+          artwork: "https://samplesongs.netlify.app/album-arts/death-bed.jpg",
+          url: "https://samplesongs.netlify.app/Death%20Bed.mp3",
+          id: "1",
+        },
+        {
+          title: "Bad Liar",
+          genre: "Hip Hop",
+          artist: "Imagine Dragons",
+          artwork: "https://samplesongs.netlify.app/album-arts/bad-liar.jpg",
+          url: "https://samplesongs.netlify.app/Bad%20Liar.mp3",
+          id: "2",
+        },
+        {
+          title: "Faded",
+          genre: "Rock",
+          artist: "Alan Walker",
+          artwork: "https://samplesongs.netlify.app/album-arts/faded.jpg",
+          url: "https://samplesongs.netlify.app/Faded.mp3",
+          id: "3",
+        },
+        {
+          title: "Hate Me",
+          genre: "Pop",
+          artist: "Ellie Goulding",
+          artwork: "https://samplesongs.netlify.app/album-arts/hate-me.jpg",
+          url: "https://samplesongs.netlify.app/Hate%20Me.mp3",
+          id: "4",
+        },
+        {
+          title: "Solo",
+          genre: "Pop",
+          artist: "Clean Bandit",
+          artwork: "https://samplesongs.netlify.app/album-arts/solo.jpg",
+          url: "https://samplesongs.netlify.app/Solo.mp3",
+          id: "5",
+        },
+        {
+          title: "Without Me",
+          genre: "Rock",
+          artist: "Halsey",
+          artwork: "https://samplesongs.netlify.app/album-arts/without-me.jpg",
+          url: "https://samplesongs.netlify.app/Without%20Me.mp3",
+          id: "6",
+        },
+      ];
+      let currentSongIndex = 0;
+
+      // Function to display songs based on genre and search query
+      function showSongs() {
+        // Clear the container before adding songs
+        allSongsListContainer.innerHTML = "";
+
+        const selectedGenre = genreFilter.value.toLowerCase();
+        const searchQuery = songSearchInput.value.toLowerCase();
+
+        // Filter songs based on the selected genre and search query
+        const filteredSongs = songsData.filter((song) => {
+          const matchesGenre =
+            selectedGenre === "all" ||
+            song.genre.toLowerCase() === selectedGenre;
+          const matchesSearch = song.title.toLowerCase().includes(searchQuery);
+          return matchesGenre && matchesSearch;
+        });
+
+        // Create an unordered list to hold song titles
+        const ul = document.createElement("ul");
+
+        // Iterate through filtered songs and create list items
+        filteredSongs.forEach((song, index) => {
+          const li = document.createElement("li");
+          li.classList.add("eachSong");
+          li.innerHTML = `${song.title} - <i>${song.artist}</i>`;
+
+          // Add click event listener to each list item
+          li.addEventListener("click", () => {
+            // Update song details when a song is clicked
+            updateSongDetails(song, index);
+          });
+
+          ul.appendChild(li);
+        });
+
+        // Append the unordered list to the container
+        allSongsListContainer.appendChild(ul);
+
+        // Display the first song initially
+        if (filteredSongs.length > 0) {
+          updateSongDetails(filteredSongs[currentSongIndex]);
+        }
+      }
+
+      // Function to update song details in the HTML
+      function updateSongDetails(song) {
+        // Update image, title, artist, and audio player with song details
+        const songImage = document.querySelector("#songImage");
+        const songName = document.querySelector(".songName");
+        const songArtistName = document.querySelector(".songArtistName");
+
+        songImage.src = song.artwork;
+        songName.textContent = song.title;
+        songArtistName.textContent = song.artist;
+
+        // Update audio player source and load
+        audioPlayer.src = song.url;
+        audioPlayer.load();
+
+        // Play the audio after loading
+        audioPlayer.play();
+      }
+
+      // Event listeners
+      genreFilter.addEventListener("change", showSongs);
+      songSearchInput.addEventListener("input", showSongs);
+
+      // Event listener for previous button
+      previousBtn.addEventListener("click", () => {
+        currentSongIndex--;
+        if (currentSongIndex < 0) {
+          currentSongIndex = songsData.length - 1; // Wrap around to the last song
+        }
+        updateSongDetails(songsData[currentSongIndex]);
+      });
+
+      // Event listener for next button
+      nextBtn.addEventListener("click", () => {
+        currentSongIndex++;
+        if (currentSongIndex >= songsData.length) {
+          currentSongIndex = 0; // Wrap around to the first song
+        }
+        updateSongDetails(songsData[currentSongIndex]);
+      });
+
+      // Initial call to display songs on page load
+      showSongs();
+
+      // Adding event listener for toggling light and dark theme colors
+      const toggleOff = document.querySelector("#toggleOff");
+      const darkLetter = document.querySelector(".darkLetter");
+      const lightLetter = document.querySelector(".lightLetter");
+      const allSongsContainer = document.querySelector(".allSongsContainer");
+      const genreFilterclr = document.querySelector("#genreFilter");
+      const songSearchInputclr = document.querySelector("#songSearchInput");
+      const songsCardMainContainer = document.querySelector(
+        ".songsCardMainContainer"
+      );
+      const songCardContainer = document.querySelector(".songCardContainer");
+      const songCardTextContent = document.querySelector(
+        ".songCardTextContent"
+      );
+      const songCardImageContainer = document.querySelector(
+        ".songCardImageContainer"
+      );
+      const songPlaylistMainContainer = document.querySelector(
+        ".songPlaylistMainContainer"
+      );
+      const songPlaylistInputclr = document.querySelector("#songPlaylistInput");
+      const playlistSearchInput = document.querySelector(
+        "#playlistSearchInput"
+      );
+      // const songPlaylistContainerh3clr = document.querySelectorAll('.songPlaylistContainer');
+
+      toggleOff.addEventListener("click", function () {
+        if (toggleOff.classList.contains("fa-toggle-off")) {
+          toggleOff.classList.remove("fa-toggle-off");
+          toggleOff.classList.add("fa-toggle-on");
+          darkLetter.style.display = "none";
+          lightLetter.style.display = "block";
+          // Dark theme for allSongsContainer
+          allSongsContainer.style.backgroundColor = "black";
+          allSongsContainer.style.color = "white";
+          genreFilterclr.style.backgroundColor = "black";
+          genreFilterclr.style.color = "white";
+          songSearchInputclr.style.backgroundColor = "white";
+          songSearchInputclr.style.border = "1px solid black";
+          songSearchInputclr.style.caretColor = "white";
+          document.querySelectorAll(".eachSong").forEach((indvSong) => {
+            indvSong.style.backgroundColor = "white";
+            indvSong.style.color = "black";
+          });
+          // Dark theme for songsCardMainContainer
+          songsCardMainContainer.style.backgroundColor = "black";
+          songCardContainer.style.backgroundColor = "white";
+          songCardTextContent.style.color = "black";
+          songCardImageContainer.style.border = "2px solid black";
+          // Dark theme for songPlaylistMainContainer
+          songPlaylistMainContainer.style.backgroundColor = "black";
+          songPlaylistMainContainer.style.color = "white";
+          songPlaylistInputclr.style.backgroundColor = "white";
+          songPlaylistInputclr.style.border = "1px solid black";
+          playlistSearchInput.style.backgroundColor = "white";
+          playlistSearchInput.style.border = "1px solid black";
+          document.querySelectorAll(".eachPlaylistSong").forEach((indvSong) => {
+            indvSong.style.backgroundColor = "black";
+            indvSong.style.color = "white";
+          });
+        } else {
+          toggleOff.classList.remove("fa-toggle-on");
+          toggleOff.classList.add("fa-toggle-off");
+          darkLetter.style.display = "block";
+          lightLetter.style.display = "none";
+          // Light theme for allSongsContainer
+          allSongsContainer.style.backgroundColor = "#6BB8DE";
+          allSongsContainer.style.color = "black";
+          genreFilterclr.style.backgroundColor = "#1890CB";
+          genreFilterclr.style.color = "black";
+          songSearchInputclr.style.backgroundColor = "#6BB8DE";
+          songSearchInputclr.style.border = "1px solid grey";
+          songSearchInputclr.style.caretColor = "black";
+          document.querySelectorAll(".eachSong").forEach((indvSong) => {
+            indvSong.style.backgroundColor = "#0B80BC";
+            indvSong.style.color = "white";
+          });
+          // Light theme for songsCardMainContainer
+          songsCardMainContainer.style.backgroundColor = "#6BB8DE";
+          songCardContainer.style.backgroundColor = "#0573AB";
+          songCardTextContent.style.color = "black";
+          songCardImageContainer.style.border = "none";
+          // Light theme for songPlaylistMainContainer
+          songPlaylistMainContainer.style.backgroundColor = "#6BB8DE";
+          songPlaylistMainContainer.style.color = "black";
+          songPlaylistInputclr.style.backgroundColor = "white";
+          songPlaylistInputclr.style.border = "1px solid black";
+          playlistSearchInput.style.backgroundColor = "#6BB8DE";
+          playlistSearchInput.style.border = "1px solid black";
+        }
+      });
+    </script>
+  </body>
+</html>

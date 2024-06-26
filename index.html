@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player - Mini</title>
+    <link rel="shortcut icon" href="https://img.icons8.com/?size=160&id=a0nRuMEHmrLC&format=png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/7e99a9e738.js" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+    <!-- Toggle theme section starts here -->
+    <section class="toggleIconContainer">
+        <i id="toggleOff" class="fa-solid fa-toggle-off"></i>
+        <p class="sgstThemeTxt"><i>"--click here to change theme --"</i></p>
+        <p class="darkLetter">L</p>
+        <p class="lightLetter">D</p>
+    </section>
+    <!-- Toggle theme section ends here -->
+    <!-- Header Section starts here -->
+        <header>
+            <h2><i>PocketTunes</i></h2>
+        </header>
+    <!-- Header Section ends here -->
+    <section class="songsMainContainer">
+    <!-- All songs section starts here -->
+        <section class="allSongsContainer">
+            <div class="filterContainer">
+                <p>Filter by Genre : 
+                <select name="genre" id="genreFilter">
+                    <option value="all">All</option>
+                    <option value="hip Hop">Hip Hop</option>
+                    <option value="rock">Rock</option>
+                    <option value="pop">Pop</option>
+                </select></p>
+            </div>
+            <input type="text" id="songSearchInput" placeholder="Search songs here...">
+            <h3>All Songs</h3>
+            <div class="allSongsListContainer">
+            </div>
+        </section>
+        <!-- All songs section ends here -->
+        <!-- Song card section starts here -->
+        <section class="songsCardMainContainer">
+            <div class="songCardContainer">
+                <div class="songCardImageContainer">
+                    <img id="songImage" src="Ninja_Logo_Comic.jpg" alt="No_Img">
+                </div>
+                <div class="audioInfoMainContainer">
+                    <div class="songCardTextContent">
+                        <h3 class="songName">Locked Away</h3>
+                        <p class="songArtistName">Adele</p>
+                    </div>
+                    <div class="songPlayerContainer">
+                        <audio id="audioInput" src="file_example_MP3_5MG.mp3" type="audio/mpeg" controls loop>
+                            Your browser doesn't support audio tag.
+                          </audio>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="songPlayerContainer">
+                <audio id="audioInput" src="file_example_MP3_5MG.mp3" type="audio/mpeg" controls loop>
+                    Your browser doesn't support audio tag.
+                  </audio>
+            </div> -->
+            <div class="prevNextBtnContainer">
+                <button type="button" class="previousBtn"><i class="fa-solid fa-backward-step"></i></button>
+                <button type="button" class="nextBtn"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+        </section>
+        <!-- Song card section ends here -->
+    </section>
+    
+    <div style="height: 100px;"></div>
+    <script src="main.js"></script>
+</body>
+</html>
